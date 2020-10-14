@@ -1,5 +1,3 @@
-# vue-openlayers // 项目名称
-
 ## Project setup // 项目设置
 ```
 npm install
@@ -17,6 +15,8 @@ npm run build
 See [Configuration Reference](https://cli.vuejs.org/config/). // 参见[配置参考]
  
 ```
+# vue-openlayers // 项目名称
+
 ### Introduction to project catalogue // 项目目录介绍
 ```
 public

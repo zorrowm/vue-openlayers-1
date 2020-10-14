@@ -1,22 +1,7 @@
-## Project setup // 项目设置
-```
-npm install
-```
-### Compiles and hot-reloads for development // 编译和热重新加载以供开发
-```
-npm run serve
-```
-### Compiles and minifies for production // 为生产而编译和缩小
-```
-npm run build
-```
-### Customize configuration // 自定义配置
-```
-See [Configuration Reference](https://cli.vuejs.org/config/). // 参见[配置参考]
- 
-```
 # vue-openlayers // 项目名称
-
+```
+vue-openlayers
+```
 ### Introduction to project catalogue // 项目目录介绍
 ```
 public
@@ -42,4 +27,32 @@ webpack.config.js
     --| Webpack 配置文件
 ```
 
-### aaa
+### Submission rules // 提交规则
+```
+type：commit类型
+feat：新功能提交
+fix：修改功能提交
+test：测试用例提交
+chore：其他修改提交
+refactor：代码重构提交
+docs：文档修改提交
+footer：备注提交（修复bug链接、注解）
+```
+
+## Project setup // 项目设置
+```
+npm install
+```
+### Compiles and hot-reloads for development // 编译和热重新加载以供开发
+```
+npm run serve
+```
+### Compiles and minifies for production // 为生产而编译和缩小
+```
+npm run build
+```
+### Customize configuration // 自定义配置
+```
+See [Configuration Reference](https://cli.vuejs.org/config/). // 参见[配置参考]
+ 
+```

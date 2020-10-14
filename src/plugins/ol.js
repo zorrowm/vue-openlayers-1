@@ -1,6 +1,6 @@
-// import Vue from 'vue'
 import Map from "ol/Map";
 import View from "ol/View";
+// import layer from "ol/layer/"
 
 import "ol/ol.css";
 

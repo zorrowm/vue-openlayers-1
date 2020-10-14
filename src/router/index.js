@@ -1,19 +1,39 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Login from '../Login/Login.vue'
+import Layout from '../layout/layout.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: "/MapHeat",
-    name: "MapHeat",
-    component: () => import("../views/MapHeat.vue")
+    path: '/login', // 登录页
+    name: 'Login',
+    component: Login,
   },
   {
-    path: "/MapDraw",
-    name: "MapDraw",
-    component: () => import("../views/MapDraw.vue")
+    path: "/", // 页面布局
+    name: "Layout",
+    component: Layout,
+    children: [
+      {
+        path: '', // 首页
+        name: 'Home',
+        component: () => import('../views/Home/Home.vue')
+      },
+      {
+        path: '/MapHeat', // 热力图
+        name: 'MapHeat',
+        component: () => import('../views/MapHeat/MapHeat.vue')
+      },
+      {
+        path: "/MapDraw", // 画点线圆
+        name: "MapDraw",
+        component: () => import("../views/MapDraw/MapDraw.vue")
+      },
+    ]
   },
+  
 
 ]
 

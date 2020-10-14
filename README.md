@@ -4,23 +4,19 @@
 ```
 npm install
 ```
-
 ### Compiles and hot-reloads for development // 编译和热重新加载以供开发
 ```
 npm run serve
 ```
-
 ### Compiles and minifies for production // 为生产而编译和缩小
 ```
 npm run build
 ```
-
 ### Customize configuration // 自定义配置
 ```
 See [Configuration Reference](https://cli.vuejs.org/config/). // 参见[配置参考]
  
 ```
-
 ### Introduction to project catalogue // 项目目录介绍
 ```
 public

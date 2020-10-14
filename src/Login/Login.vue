@@ -30,6 +30,7 @@
     </div>
 </template>
 <script>
+import { mapMutations } from 'vuex'
 export default {
     name: 'Login',
     data() {
@@ -52,6 +53,7 @@ export default {
 
     },
     methods: {
+        ...mapMutations(['setState']),
         onSubmit() {
             if(this.formData.username === "admin" && this.formData.password === "123456") {
                 this.$notification.success({
@@ -62,14 +64,19 @@ export default {
                 // vue-router 传参方式（ 接参：this.$route.params ）
                 this.$router.push({
                     name: '/',
-                    params:{
-                        username:"admin",
-                        password:"123456"
+                    params: {
+                        username: this.formData.username,
+                        password: this.formData.password,
                     }
                 })
                 console.log(this.$route.params);
-                // 存储在VueX
-                
+                // 存储在VueX 调用mutations存储state值
+                this.setState({
+                    user: {
+                        username: this.formData.username,
+                        password: this.formData.password,
+                    }
+                })
             }
         }
     }

@@ -22,15 +22,16 @@ const routes = [
         component: () => import('../views/Home/Home.vue')
       },
       {
-        path: '/MapHeat', // 热力图
-        name: 'MapHeat',
-        component: () => import('../views/MapHeat/MapHeat.vue')
-      },
-      {
         path: "/MapDraw", // 画点线圆
         name: "MapDraw",
         component: () => import("../views/MapDraw/MapDraw.vue")
       },
+      {
+        path: '/MapHeat', // 热力图
+        name: 'MapHeat',
+        component: () => import('../views/MapHeat/MapHeat.vue')
+      },
+      
     ]
   },
   

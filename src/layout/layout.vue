@@ -5,11 +5,12 @@
             <a-layout>
                 <a-layout-sider>
                     <a-menu
-                        :default-selected-keys="menuDefault"
                         mode="inline"
                         theme="dark"
+                        :default-selected-keys="['/MapDraw']"
+                        v-model="menuCurrent"
                     >
-                        <a-menu-item v-for="i in menuData" :key="i.id">
+                        <a-menu-item v-for="i in menuData" :key="i.component">
                             <router-link :to="{path:i.component}">
                                 <div class="menuName">
                                     <a-icon type="code-sandbox" />
@@ -31,16 +32,15 @@ export default {
     name:"Layout",
     data() {
         return {
-            collapsed: false,
             menuData: [
-                {id: 1, component: 'MapDraw', name: '画图'},
-                {id: 2, component: 'MapHeat', name: '热力图'}, 
+                {component: '/MapDraw', name: '画图'},
+                {component: '/MapHeat', name: '热力图'}, 
             ],
-            menuDefault: [1],
+            menuCurrent: ['/MapDraw'],
         }
     },
     mounted() {
-        console.log("132423");
+        this.$router.push({name:'MapDraw'})
     }
 }
 </script>

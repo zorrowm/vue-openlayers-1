@@ -11,8 +11,10 @@
                     >
                         <a-menu-item v-for="i in menuData" :key="i.id">
                             <router-link :to="{path:i.component}">
-                                <a-icon type="code-sandbox" />
-                                <div style="color:red">{{i.name}}</div>
+                                <div class="menuName">
+                                    <a-icon type="code-sandbox" />
+                                    <span>{{i.name}}</span>
+                                </div>
                             </router-link>
                         </a-menu-item>
                     </a-menu>
@@ -21,7 +23,6 @@
                     <router-view></router-view>
                 </a-layout-content>
             </a-layout>
-            
         </a-layout>
     </div>
 </template>
@@ -36,6 +37,9 @@ export default {
                 {id: 2, component: 'MapHeat', name: '热力图'}, 
             ],
         }
+    },
+    mounted() {
+        console.log("132423");
     }
 }
 </script>
@@ -50,6 +54,9 @@ export default {
         font-size: 24px;
     }
 
+    .menuName{
+        color: #ffffff;
+    }
 
 }
 </style>

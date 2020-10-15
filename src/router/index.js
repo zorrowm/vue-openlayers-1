@@ -1,13 +1,13 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Login from '../Login/Login.vue'
-import Layout from '../layout/layout.vue'
+import Login from '../login/Login.vue'
+import Layout from '../layout/Layout.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/login', // 登录页
+    path: '/Login', // 登录页
     name: 'Login',
     component: Login,
   },
@@ -16,11 +16,6 @@ const routes = [
     name: "Layout",
     component: Layout,
     children: [
-      {
-        path: '', // 首页
-        name: 'Home',
-        component: () => import('../views/Home/Home.vue')
-      },
       {
         path: "/MapDraw", // 画点线圆
         name: "MapDraw",

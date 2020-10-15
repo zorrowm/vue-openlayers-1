@@ -6,20 +6,20 @@
         <a-col class="loginRight" :span="7">
             <a-form-model
                 class="loginForm"
-                ref="ruleForm"
+                ref="loginForm"
                 :model="formData"
                 :rules="rules"
                 :label-col="labelCol"
                 :wrapper-col="wrapperCol"
             >
                 <a-form-model-item  prop="username">
-                    <a-input v-model="formData.username" placeholder="账号">
+                    <a-input v-model="formData.username" placeholder="账号" @pressEnter="onSubmit">
                         <a-icon slot="prefix" type="user" style="color: rgba(0, 0, 0, 0.25)" />
                     </a-input>
                 </a-form-model-item>
                 <a-form-model-item  prop="password">
-                    <a-input v-model="formData.password" placeholder="密码">
-                        <a-icon slot="prefix" type="user" style="color: rgba(0, 0, 0, 0.25)" />
+                    <a-input type="password" v-model="formData.password" placeholder="密码" @pressEnter="onSubmit">
+                        <a-icon slot="prefix" type="lock" style="color: rgba(0, 0, 0, 0.25)" />
                     </a-input>
                 </a-form-model-item>
                 <a-form-model-item >
@@ -42,42 +42,57 @@ export default {
                 password: "",
             },
             rules: {
-                name: [
-                    { required: true, message: 'Please input Activity name', trigger: 'blur' },
-                    { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' },
+                username: [
+                    { required: true, message: '请输入账号', trigger: 'blur' },
+                ],
+                password: [
+                    { required: true, message: '请输入密码', trigger: 'blur' },
                 ],
             }
         }
     },
-    created() {
-
-    },
     methods: {
         ...mapMutations(['setState']),
         onSubmit() {
-            if(this.formData.username === "admin" && this.formData.password === "123456") {
-                this.$notification.success({
-                    message: '登录成功',
-                    description: '即将跳转',
-                })
-                
-                // vue-router 传参方式（ 接参：this.$route.params ）
-                this.$router.push({
-                    name: '/',
-                    params: {
-                        username: this.formData.username,
-                        password: this.formData.password,
+            // 验证表单填写
+            this.$refs.loginForm.validate(valid => {
+                if(valid){
+                    if(this.formData.username === "admin" && this.formData.password === "123456") {
+                        this.$notification.success({
+                            message: '登录成功',
+                            description: '即将跳转',
+                        })
+                        
+                        // vue-router 传参方式（ 接参：this.$route.params ）query会拼接到url，params不会
+                        this.$router.push({
+                            name: 'Layout',
+                            params: {
+                                username: this.formData.username,
+                                password: this.formData.password,
+                            }
+                        })
+                        console.log(this.$route.params);
+    
+                        // 存储在VueX 调用mutations存储state值
+                        this.setState({
+                            user: {
+                                username: this.formData.username,
+                                password: this.formData.password,
+                            }
+                        })
+                    }else{
+                        this.$notification.error({
+                            message: '请输入正确的账号密码',
+                            description: '',
+                        })
                     }
-                })
-                console.log(this.$route.params);
-                // 存储在VueX 调用mutations存储state值
-                this.setState({
-                    user: {
-                        username: this.formData.username,
-                        password: this.formData.password,
-                    }
-                })
-            }
+                } else {
+                    this.$notification.error({
+                        message: '请输入账号密码',
+                        description: '',
+                    })
+                }
+            })
         }
     }
 }
@@ -87,6 +102,8 @@ export default {
     width: 100%;
     height: 100%;
     color: #fff;
+    background: url(~@/assets/background.jpg) center no-repeat;
+    background-size: 100% 100%;
 
     .loginLeft {
         height: 100%;

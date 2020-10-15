@@ -3,7 +3,16 @@
     <router-view/>
   </div>
 </template>
+<script>
+export default {
+  name: 'App',
+  data() {
+    return {
 
+    }
+  },
+}
+</script>
 <style lang="scss">
 *{
   margin: 0;
@@ -15,8 +24,7 @@
     -moz-osx-font-smoothing: grayscale;
     width: 100vw;
     height: 100vh;
-    background: url(~@/assets/background.jpg) center no-repeat;
-    background-size: 100% 100%;
+    
   }
 }
 </style>

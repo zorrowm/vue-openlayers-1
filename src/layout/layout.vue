@@ -5,7 +5,7 @@
             <a-layout>
                 <a-layout-sider>
                     <a-menu
-                        :default-selected-keys="[1]"
+                        :default-selected-keys="menuDefault"
                         mode="inline"
                         theme="dark"
                     >
@@ -36,6 +36,7 @@ export default {
                 {id: 1, component: 'MapDraw', name: '画图'},
                 {id: 2, component: 'MapHeat', name: '热力图'}, 
             ],
+            menuDefault: [1],
         }
     },
     mounted() {

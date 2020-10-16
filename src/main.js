@@ -7,7 +7,6 @@ Vue.config.productionTip = false
 
 //引入的插件
 import "./plugins/antd"; //ant-design-vue
-import "./plugins/ol";   //openlayers
 
 
 //创建vue实例并挂载到App

@@ -51,16 +51,13 @@ export default {
       this.initMap()
 
       if (this.valueType === 'Point') {
-        console.log(this.valueType);
         this.point(this.mapPoint)
       } else if (this.valueType === 'LineString') {
-        console.log(this.valueType);
         this.lines()
       } else if (this.valueType === 'Circle') {
-        console.log(this.valueType);
         this.circle()
       } else if (this.valueType === 'Polygon') {
-        console.log(this.valueType);
+        this.Polygon()
       }
     },
     methods:{

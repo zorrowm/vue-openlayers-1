@@ -7,8 +7,9 @@
                     <a-menu
                         mode="inline"
                         theme="dark"
-                        :default-selected-keys="['/MapDraw']"
+                        :default-selected-keys="menuCurrent"
                         v-model="menuCurrent"
+                        @click="menuSwitch"
                     >
                         <a-menu-item v-for="i in menuData" :key="i.component">
                             <router-link :to="{path:i.component}">
@@ -28,19 +29,35 @@
     </div>
 </template>
 <script>
+import { mapState, mapMutations } from 'vuex'
+
 export default {
     name:"Layout",
     data() {
         return {
             menuData: [
+                {component: '/MapControl', name: '地图控件'},
                 {component: '/MapDraw', name: '画图'},
                 {component: '/MapHeat', name: '热力图'}, 
             ],
-            menuCurrent: ['/MapDraw'],
+            menuCurrent: ['/MapControl'],
         }
     },
-    mounted() {
-        this.$router.push({name:'MapDraw'})
+    computed: {
+        ...mapState({
+            current: state => state.current,
+        })
+    },
+    created() {
+        this.menuCurrent = this.current
+    },
+    methods: {
+        ...mapMutations([ 'setState' ]),
+        menuSwitch(res) {
+            this.setState({
+                current: res.keyPath
+            })
+        }
     }
 }
 </script>

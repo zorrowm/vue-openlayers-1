@@ -1,0 +1,10 @@
+// vs code 路径配置
+{
+    "compilerOptions": {
+        "baseUrl": "./",
+        "paths": {
+        "@/*": ["src/*"]
+        }
+    }
+}
+  

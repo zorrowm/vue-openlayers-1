@@ -41,7 +41,11 @@ const routes = [
       
     ]
   },
-  
+  {
+    path: '/index', // 热力图
+    name: 'index',
+    component: () => import('../components/index.vue')
+  },
 
 ]
 

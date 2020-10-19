@@ -9,42 +9,52 @@ import ol from "@/plugins/ol"
 
 export default {
     name: 'MapControl',
-    data () {
+    data() {
         return {
             MapControl: null,
-
         }
     },
-    mounted () {
-        console.log(ol);
-        this.initMap()
+    mounted() {
+        const initMap = setTimeout( () => {
+            this.initMap()
+            this.renderMap()
+        },1000)
+        
+        this.$once('hook:beforeDestroy', () => {
+            clearTimeout(initMap)
+        })
     },
-    methods : {
-        initMap () {
-            //创建天地矢量图层
-            let TileLayers = ol.Layer.Tile({
-                title:'天地矢量图层',
+    methods: {
+        // 初始化创建地图
+        initMap() {
+            // 创建高德矢量图层
+            let TileLayers =  new ol.Layer.Tile({
+                title: "高德地图",
                 source: new ol.Source.XYZ({
-                    url: 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibTAxaTBuZyIsImEiOiJjazN3ZHE1NTQwcmFkM290Nmk2MDh1ZWN6In0.BNAU4GtzUgqsu527akTwrg',
-                }),
-                wrapX: false,
-            })
-            //实例化Map对象，加载地图
+                    url: 'http://wprd0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&style=7&x={x}&y={y}&z={z}',
+                    wrapX: false
+                })
+            });
+
+            // 实例化Map对象，加载地图
             this.MapControl = new ol.Map({
                 target: 'MapControl', // 地图容器
-                controls: ol.Control.defaults({
-                    attributionOptions: ({
-                        collapsible: true
-                    })
-                }).extend([
-                    new ol.Control.ZoomToExtent({
-                        extent: [
-                            813079.7791264898, 5929220.284081122,
-                            848966.9639063801, 5936863.986909639
-                        ]
-                    })
-                ])
-            })
+                layers: [ TileLayers ], // 添加的图层（注意顺序）
+                view: new ol.View({
+                    center:  [12958752, 4848452], // 地图初始中心位置
+                    projection: 'EPSG:3857', // 地图投影
+                    zoom: 5, // 层级
+                    minZoom:3, //最小层级
+                    maxZoom: 20, //最大层级
+                }),
+            });
+
+            // 
+        },
+        // 渲染地图 render()
+        renderMap() {
+            console.log(this.MapControl);
+            this.MapControl.render()
         }
     }
 }

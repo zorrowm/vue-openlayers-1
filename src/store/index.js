@@ -18,7 +18,6 @@ export default new Vuex.Store({
       Object.keys(payload).forEach(key => {
         state[key] = payload[key]
       })
-      console.log(state,payload);
     },
   },
   actions: {

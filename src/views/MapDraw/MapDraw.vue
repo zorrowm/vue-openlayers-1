@@ -83,6 +83,7 @@ export default {
             zoom:5,
           })
         })
+        console.log(this.map);
       },
       point(val){
         //创建一个点

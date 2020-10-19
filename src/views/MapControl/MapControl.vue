@@ -1,7 +1,7 @@
 <template>
     <div class="MapControl">
         <!-- 地图控件 -->
-        <div id="MapControl"></div>
+        <div id="MapControl" ref="MapControl"></div>
     </div>
 </template>
 <script>
@@ -12,6 +12,7 @@ export default {
     data() {
         return {
             MapControl: null,
+            TileLayers: null,
         }
     },
     mounted() {
@@ -28,7 +29,7 @@ export default {
         // 初始化创建地图
         initMap() {
             // 创建高德矢量图层
-            let TileLayers =  new ol.Layer.Tile({
+            this.TileLayers =  new ol.Layer.Tile({
                 title: "高德地图",
                 source: new ol.Source.XYZ({
                     url: 'http://wprd0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&style=7&x={x}&y={y}&z={z}',
@@ -39,7 +40,7 @@ export default {
             // 实例化Map对象，加载地图
             this.MapControl = new ol.Map({
                 target: 'MapControl', // 地图容器
-                layers: [ TileLayers ], // 添加的图层（注意顺序）
+                layers: [ this.TileLayers ], // 添加的图层（注意顺序）
                 view: new ol.View({
                     center:  [12958752, 4848452], // 地图初始中心位置
                     projection: 'EPSG:3857', // 地图投影
@@ -49,12 +50,23 @@ export default {
                 }),
             });
 
-            // 
+            // 缩放层级zoomSlider控件加载到地图
+            let zoomslider = new ol.Control.ZoomSlider()
+            // this.MapControl.addLayer(zoomslider)
+            console.log();
+            console.log(this.MapControl,zoomslider);
         },
         // 渲染地图 render()
         renderMap() {
-            console.log(this.MapControl);
-            this.MapControl.render()
+            
+        },
+        // 添加图层
+        addLayerMap(){
+
+        },
+        // 删除图层
+        removeLayerMap(){
+            
         }
     }
 }

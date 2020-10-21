@@ -29,6 +29,11 @@ const routes = [
         component: () => import("../views/MapControl/MapControl.vue")
       },
       {
+        path: '/MapOperation', // 地图操作
+        name: "MapOperation",
+        component: () => import("../views/MapOperation/MapOperation.vue")
+      },
+      {
         path: "/MapDraw", // 画点线圆
         name: "MapDraw",
         component: () => import("../views/MapDraw/MapDraw.vue")

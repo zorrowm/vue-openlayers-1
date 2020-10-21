@@ -43,7 +43,6 @@ export default {
     mounted() {
         const initMap = setTimeout( () => {
             this.initMap()
-            this.renderMap()
         },1000)
         
         this.$once('hook:beforeDestroy', () => {
@@ -65,7 +64,7 @@ export default {
                 title: "高德地图",
                 source: new ol.Source.XYZ({
                     url: 'http://wprd0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&style=7&x={x}&y={y}&z={z}',
-                    wrapX: false
+                    wrapX: false,
                 }),
                 visible: false, // 先隐藏该图层
             });
@@ -80,6 +79,7 @@ export default {
                     zoom: 4, // 初始显示级别
                     minZoom:3, //最小级别
                     maxZoom: 20, //最大级别
+                    // rotation: Math.PI / 6, // 设置旋转角度
                 }),
             });
 
@@ -156,18 +156,6 @@ export default {
                 this.colled = true;
                 this.layerControlWidth = "310px";
             }
-        },
-        // 渲染地图 render()
-        renderMap() {
-            
-        },
-        // 添加图层
-        addLayerMap() {
-
-        },
-        // 删除图层
-        removeLayerMap() {
-            
         },
     }
 }

@@ -37,6 +37,7 @@ export default {
         return {
             menuData: [
                 {component: '/MapControl', name: '地图控件'},
+                {component: '/MapOperation', name: '地图操作'},
                 {component: '/MapDraw', name: '画图'},
                 {component: '/MapHeat', name: '热力图'}, 
             ],

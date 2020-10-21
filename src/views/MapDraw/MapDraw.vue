@@ -25,9 +25,6 @@ import Style from 'ol/style/Style'
 import Fill from 'ol/style/Fill'
 import Stroke from 'ol/style/Stroke'
 import CircleStyle from 'ol/style/Circle'
-// import LineString from 'ol/geom/LineString'
-// import Circle from 'ol/geom/Circle'
-// import Polygon from 'ol/geom/Polygon'
 import "ol/ol.css"
 
 export default {

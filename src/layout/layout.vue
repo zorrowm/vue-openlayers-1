@@ -46,11 +46,24 @@ export default {
     },
     computed: {
         ...mapState({
+            user: state => state.user,
             current: state => state.current,
         })
     },
     created() {
-        this.menuCurrent = this.current
+        if(this.user.username && this.user.password) {
+            this.menuCurrent = this.current;
+            
+        } else {
+            this.$notification.success({
+                message: '请重新登录',
+                description: '即将跳转登陆页',
+            })
+
+            this.$router.push({
+                name: 'Login',
+            })
+        }
     },
     methods: {
         ...mapMutations([ 'setState' ]),

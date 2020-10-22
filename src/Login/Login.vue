@@ -60,9 +60,20 @@ export default {
                     if(this.formData.username === "admin" && this.formData.password === "123456") {
                         this.$notification.success({
                             message: '登录成功',
-                            description: '即将跳转',
+                            description: '即将跳转首页',
                         })
                         
+                        // 存储在 VueX 调用mutations存储state值
+                        this.setState({
+                            user: {
+                                username: this.formData.username,
+                                password: this.formData.password,
+                            }
+                        })
+
+                        // sessionStorage存储
+                        sessionStorage.setItem("userInformation", JSON.stringify(this.formData))
+
                         // vue-router 传参方式（ 接参：this.$route.params ）query会拼接到url，params不会
                         this.$router.push({
                             name: 'Layout',
@@ -72,14 +83,6 @@ export default {
                             }
                         })
                         console.log(this.$route.params);
-    
-                        // 存储在VueX 调用mutations存储state值
-                        this.setState({
-                            user: {
-                                username: this.formData.username,
-                                password: this.formData.password,
-                            }
-                        })
                     }else{
                         this.$notification.error({
                             message: '请输入正确的账号密码',
@@ -125,7 +128,7 @@ export default {
         align-items: center;
 
         .loginForm {
-            width: 400px;
+            width: 100%;
             height: 200px;
 
             .loginButton {

@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Vuex from 'vuex'
 import Login from '../login/Login.vue'
 import Layout from '../layout/Layout.vue'
 
@@ -58,6 +59,16 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+/* 导航守卫 */
+router.beforeEach((to, from, next) => {
+  // 获取登录状态和是否跳转到登录
+  if(sessionStorage.getItem('userInformation')) {
+    next()
+  } else {
+    next({ name: 'Login' })
+  }
 })
 
 export default router

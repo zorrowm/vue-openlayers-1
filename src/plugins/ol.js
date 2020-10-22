@@ -11,7 +11,7 @@ import * as Interaction from "ol/interaction" //
 import * as Format from "ol/format" // 
 import * as Geom from "ol/geom" // 
 import * as Feature from "ol/Feature" // 
-import Render from "ol/render" // 
+import * as Render from "ol/render" // 
 
 
 // 地图Css样式加载

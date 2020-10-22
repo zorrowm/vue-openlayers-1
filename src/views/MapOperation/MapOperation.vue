@@ -235,7 +235,7 @@ export default {
         },
         // 地图层级
         MapHierarchy() {
-
+            
         },
         // 地图视窗逻辑坐标
         MapCoordinate() {
@@ -278,6 +278,7 @@ export default {
             view.setZoom(8);
             this.visible = false;
         },
+
     }
 }
 </script>

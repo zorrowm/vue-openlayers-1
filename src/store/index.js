@@ -11,7 +11,7 @@ export default new Vuex.Store({
       username:null,
       password:null,
     },
-    current: ['/MapControl']
+    current: ['/MapControl'],
   },
   mutations: {
     setState(state,payload){

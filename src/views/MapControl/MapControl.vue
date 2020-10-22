@@ -171,11 +171,11 @@ export default {
 
         /* 鼠标位置控件层样式设置 */
         #mouse-position {
-            float: left;
+            float: right;
             position: absolute;
             right: 10px;
             bottom: 10px;
-            width: 150px;
+            width: 300px;
             height: 20px;
             z-index: 999; /*在地图容器中的层，要设置z-index的值让其显示在地图上层*/
         }
@@ -184,6 +184,7 @@ export default {
             color: #000;
             font-size: 16px;
             font-family: "微软雅黑";
+            float: right;
         }
 
         /* 自定义鹰眼样式 */

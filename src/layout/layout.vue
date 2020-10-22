@@ -52,8 +52,9 @@ export default {
     },
     created() {
         if(this.user.username && this.user.password) {
+
+            console.log(this.$route)
             this.menuCurrent = this.current;
-            
         } else {
             this.$notification.success({
                 message: '请重新登录',
@@ -69,7 +70,7 @@ export default {
         ...mapMutations([ 'setState' ]),
         menuSwitch(res) {
             this.setState({
-                current: res.keyPath
+                current: res.keyPath,
             })
         }
     }

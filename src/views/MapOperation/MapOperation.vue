@@ -23,12 +23,31 @@
         <!-- 提示框 -->
         <a-modal
             title="Title"
-            :visible="visible"
+            :visible="visiblePosition"
             @ok="clickPosition"
-            @cancel="visible = false"
+            @cancel="visiblePosition = false"
         >
             <p>经度：<a-input placeholder="请输入经度" v-model="positionFrom.lon"/></p>
             <p>纬度：<a-input placeholder="请输入纬度" v-model="positionFrom.lat"/></p>
+            <p>级别：<a-input placeholder="请输入级别" v-model="positionFrom.zoom"/></p>
+        </a-modal>
+        <!-- 提示框 -->
+        <a-modal
+            title="Title"
+            :visible="visibleCoordinate"
+            @ok="visibleCoordinate = false"
+            @cancel="visibleCoordinate = false"
+        >
+            <p>坐标类型：
+                <a-select default-value="EPSG:4326" style="width: 120px" v-model="currentCoordinate">
+                    <a-select-option :value="i.id" v-for="i in coordinateData" :key="i.id">
+                        {{i.name}}
+                    </a-select-option>
+                </a-select>
+            </p>
+            <p><button>当前分辨率</button></p>
+            <p><button>当前地图范围</button></p>
+            <p><button>当前视口范围</button></p>
         </a-modal>
     </div>
 </template>
@@ -39,6 +58,7 @@ export default {
     data() {
         return {
             MapOperation: null,
+            mousePostionControl:null,
             operation: [
                 {name: "放大", id: 1},
                 {name: "缩小", id: 2},
@@ -59,11 +79,27 @@ export default {
             colled: true,
             layerControlWidth: "310px",
             background:'none',
-            visible: false,
+            visiblePosition: false,
             positionFrom: {
                 lon: null,
                 lat: null,
-            }
+                zoom: null,
+            },
+            visibleCoordinate: false,
+            currentCoordinate: 'EPSG:4326',
+            coordinateData: [
+                {id: 'EPSG:4326', name: '视窗坐标'},
+                {id: 'EPSG:3857', name: '逻辑坐标'},
+            ]
+        }
+    },
+    watch: {
+        currentCoordinate: {
+            handler(val) {
+                console.log(val);
+                this.mousePostionControl.setProjection(ol.Proj.get(val))
+            },
+            deep: true, //深度监听
         }
     },
     mounted() {
@@ -116,14 +152,14 @@ export default {
             this.MapOperation.addControl(scaleLineControl)
 
             // 鼠标位置 MousePosition 控件加载到地图
-            let mousePostionControl = new ol.Control.MousePosition({
+            this.mousePostionControl = new ol.Control.MousePosition({
                 coordinateFormat: ol.Coordinate.createStringXY(4), // 坐标格式
                 projection: 'EPSG:4326', // 地图投影坐标系（未设置输出默认投影坐标系下的坐标）
                 className: 'custom-mouse-position', // 坐标信息显示样式类名 默认是：ol-mouse-position
                 target: document.querySelector('#mouse-position'), // 显示鼠标位置信息的目标容器
                 undefinedHTML: '&nbsp;', // 未定义坐标的标记(离开地图)
             })
-            this.MapOperation.addControl(mousePostionControl)
+            this.MapOperation.addControl(this.mousePostionControl)
         },
         // 收起操作列表,动态设置最小宽度
         collected() {
@@ -231,19 +267,19 @@ export default {
         },
         // 地图定位
         MapPosition() {
-            this.visible = true
+            this.visiblePosition = true
         },
         // 地图层级
         MapHierarchy() {
-            
+            this.visiblePosition = true
         },
         // 地图视窗逻辑坐标
         MapCoordinate() {
-
+            this.visibleCoordinate = true;
         },
         // 地图域信息
         MapRegionInformation() {
-
+            this.visibleCoordinate = true;
         },
         // 地图下载PNG
         MapDownloadPNG() {
@@ -275,10 +311,9 @@ export default {
             let py = ol.Proj.fromLonLat([this.positionFrom.lon, this.positionFrom.lat],'EPSG:4326');
             //平移地图设置中心点和级别
             view.setCenter(py);
-            view.setZoom(8);
-            this.visible = false;
+            view.setZoom(this.positionFrom.zoom);
+            this.visiblePosition = false;
         },
-
     }
 }
 </script>
@@ -294,11 +329,11 @@ export default {
 
         /* 鼠标位置控件层样式设置 */
         #mouse-position {
-            float: left;
+            float: right;
             position: absolute;
             right: 10px;
             bottom: 10px;
-            width: 150px;
+            width: 300px;
             height: 20px;
             z-index: 999; /*在地图容器中的层，要设置z-index的值让其显示在地图上层*/
         }
@@ -307,6 +342,7 @@ export default {
             color: #000;
             font-size: 16px;
             font-family: "微软雅黑";
+            float: right;
         }
 
         /* 图层控件层样式设置 */

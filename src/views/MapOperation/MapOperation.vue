@@ -49,15 +49,24 @@
             <p>当前地图范围: {{MapRegionData.mapRange}}</p>
             <p>当前视口范围: {{MapRegionData.viewportExtents}}</p>
         </a-modal>
+        <!-- 下载地图png -->
+        <a id="image-download" download="map.png"></a>
+        <!--  -->
+        <!--鼠标点击事件-->
+        <div class="resultDiv" id="resultDiv1"> </div>
     </div>
 </template>
 <script>
 import ol from "@/plugins/ol"
+import { jsPDF } from "jspdf";
+import {renderSync} from 'ol/render';
+
 export default {
     name: 'MapOperation',
     data() {
         return {
             MapOperation: null,
+            gaodeLayer: null,
             mousePostionControl:null,
             operation: [
                 {name: "放大", id: 1},
@@ -119,7 +128,7 @@ export default {
     methods: {
         initMap() {
             // 创建高德矢量图层
-            let gaodeLayer =  new ol.Layer.Tile({
+            this.gaodeLayer =  new ol.Layer.Tile({
                 title: "高德地图",
                 source: new ol.Source.XYZ({
                     url: 'http://wprd0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&style=7&x={x}&y={y}&z={z}',
@@ -132,7 +141,7 @@ export default {
             // 实例化Map对象，加载地图
             this.MapOperation = new ol.Map({
                 target: 'MapOperation', // 地图容器
-                layers: [ gaodeLayer ], // 地图容器中加载的图层（注意顺序）
+                layers: [ this.gaodeLayer ], // 地图容器中加载的图层（注意顺序）
                 view: new ol.View({ // 地图视图设置
                     center:  [119,40], // 地图初始中心位置
                     projection: 'EPSG:4326', // 地图投影
@@ -299,63 +308,176 @@ export default {
         },
         // 地图下载PNG
         MapDownloadPNG() {
-            // this.MapOperation.once('rendercomplete', () => {
-            //     var mapCanvas = document.createElement('canvas');
-            //     var size = map.getSize();
-            //     mapCanvas.width = size[0];
-            //     mapCanvas.height = size[1];
-            //     var mapContext = mapCanvas.getContext('2d');
-            //     Array.prototype.forEach.call(
-            //     document.querySelectorAll('.ol-layer canvas'),
-            //     function (canvas) {
-            //         if (canvas.width > 0) {
-            //         var opacity = canvas.parentNode.style.opacity;
-            //         mapContext.globalAlpha = opacity === '' ? 1 : Number(opacity);
-            //         var transform = canvas.style.transform;
-            //         // Get the transform parameters from the style's transform matrix
-            //         var matrix = transform
-            //             .match(/^matrix\(([^\(]*)\)$/)[1]
-            //             .split(',')
-            //             .map(Number);
-            //         // Apply the transform to the export map context
-            //         CanvasRenderingContext2D.prototype.setTransform.apply(
-            //             mapContext,
-            //             matrix
-            //         );
-            //         mapContext.drawImage(canvas, 0, 0);
-            //         }
-            //     }
-            //     );
-            //     if (navigator.msSaveBlob) {
-            //         // link download attribuute does not work on MS browsers
-            //         navigator.msSaveBlob(mapCanvas.msToBlob(), 'map.png');
-            //     } else {
-            //         var link = document.getElementById('image-download');
-            //         link.href = mapCanvas.toDataURL();
-            //         link.click();
-            //     }
-            // });
-
-            // this.MapOperation.once('rendercomplete', event => { 
-            //     let mapCanvas = document.querySelector('.ol-layers canvas')
-            //     console.log(mapCanvas);
-            //     mapCanvas.toBlob(bolb => {
-            //         saveAs(blob, 'map.png');
-            //     })
-            // })
-            // this.MapOperation.renderSync();
+            this.MapOperation.once('rendercomplete', function () {
+                let mapCanvas = document.createElement('canvas');
+                let size = this.MapOperation.getSize();
+                mapCanvas.width = size[0];
+                mapCanvas.height = size[1];
+                let mapContext = mapCanvas.getContext('2d');
+                Array.prototype.forEach.call(
+                    document.querySelectorAll('.ol-layer canvas'),
+                    function (canvas) {
+                        if (canvas.width > 0) {
+                            let opacity = canvas.parentNode.style.opacity;
+                            mapContext.globalAlpha = opacity === '' ? 1 : Number(opacity);
+                            let transform = canvas.style.transform;
+                            let matrix = transform
+                                .match(/^matrix\(([^\(]*)\)$/)[1]
+                                .split(',')
+                                .map(Number);
+                            CanvasRenderingContext2D.prototype.setTransform.apply(
+                                mapContext,
+                                matrix
+                            );
+                            mapContext.drawImage(canvas, 0, 0);
+                        }
+                    }
+                );
+                if (navigator.msSaveBlob) {
+                    navigator.msSaveBlob(mapCanvas.msToBlob(), 'map.png');
+                } else {
+                    let link = document.getElementById('image-download');
+                    link.href = mapCanvas.toDataURL();
+                    link.click();
+                }
+            });
+            this.MapOperation.renderSync();
         },
         // 地图下载PDF
         MapDownloadPDF() {
+            let feature = new ol.Format.WKT().readFeature(
+            'POLYGON((10.689697265625 -25.0927734375, 34.595947265625 ' +
+                '-20.1708984375, 38.814697265625 -35.6396484375, 13.502197265625 ' +
+                '-39.1552734375, 10.689697265625 -25.0927734375))'
+            );
+            feature.getGeometry().transform('EPSG:4326', 'EPSG:3857');
 
+            document.body.style.cursor = 'progress';
+            
+            let dims = {
+                a0: [1189, 841],
+                a1: [841, 594],
+                a2: [594, 420],
+                a3: [420, 297],
+                a4: [297, 210],
+                a5: [210, 148],
+            };
+            let format = "a3";
+            let resolution = '72';
+            let dim = dims[format];
+            let width = Math.round((dim[0] * resolution) / 25.4);
+            let height = Math.round((dim[1] * resolution) / 25.4);
+            let size = this.MapOperation.getSize();
+            let viewResolution = this.MapOperation.getView().getResolution();
+
+            this.MapOperation.once('rendercomplete', () => {
+                let mapCanvas = document.createElement('canvas');
+                mapCanvas.width = width;
+                mapCanvas.height = height;
+                let mapContext = mapCanvas.getContext('2d');
+                Array.prototype.forEach.call(
+                    document.querySelectorAll('.ol-layer canvas'),
+                    function (canvas) {
+                        if (canvas.width > 0) {
+                            let opacity = canvas.parentNode.style.opacity;
+                            mapContext.globalAlpha = opacity === '' ? 1 : Number(opacity);
+                            let transform = canvas.style.transform;
+
+                            let matrix = transform
+                                .match(/^matrix\(([^\(]*)\)$/)[1]
+                                .split(',')
+                                .map(Number);
+
+                            CanvasRenderingContext2D.prototype.setTransform.apply(
+                                mapContext,
+                                matrix
+                            );
+                            mapContext.drawImage(canvas, 0, 0);
+                        }
+                    }
+                );
+                
+                let pdf = new jsPDF('landscape', 'pt', 'a4');
+                pdf.addImage(
+                    mapCanvas.toDataURL('image/jpeg'),
+                    'JPEG',
+                    0,
+                    0,
+                    dim[0],
+                    dim[1]
+                );
+                pdf.save('map.pdf');
+                
+                this.MapOperation.setSize(size);
+                this.MapOperation.getView().setResolution(viewResolution);
+                document.body.style.cursor = 'auto';
+            });
+
+            let printSize = [width, height];
+            this.MapOperation.setSize(printSize);
+            let scaling = Math.min(width / size[0], height / size[1]);
+            this.MapOperation.getView().setResolution(viewResolution / scaling);
         },
         // 地图事件触发
         MapEvent() {
-
+            this.MapOperation.on('singleclick', e => {
+                alert("鼠标被单击了",e);
+            })
         },
         // 地图图层探查
         MapLayerExploration() {
+            let radius = 75; // 探查半径
+            
+            document.addEventListener('keydown', function (evt) { // 添加键盘按下事件监听，用来控制探查范围的大小
+                if (evt.which == 38) {
+                    radius = Math.min(radius + 5, 150);
+                    //this.MapOperation.renderSync();
+                    evt.preventDefault();
+                } else if (evt.which == 40) {
+                    radius = Math.max(radius - 5, 25);
+                    this.MapOperation.renderSync();
+                    evt.preventDefault();
+                }
+            });
 
+            // 实时得到鼠标的像素位置
+            let mousePosition = null;
+
+            //设置地图容器放置位置
+            let container = document.querySelector('#MapOperation');
+
+            container.addEventListener('mousemove', event => {
+                console.log(this.MapOperation);
+                mousePosition = this.MapOperation.getEventPixel(event);
+                ol.renderSync(this.MapOperation);
+            });
+
+            container.addEventListener('mouseout', () => {
+                mousePosition = null;
+                this.MapOperation.renderSync();
+            });
+
+            // 在渲染层之前,做剪裁
+            this.gaodeLayer.on('precompose', event => {
+                let ctx = event.context;
+                let pixelRatio = event.frameState.pixelRatio;
+                ctx.save();
+                ctx.beginPath();
+                if (mousePosition) {
+                    //只显示一个围绕着鼠标的圆圈
+                    ctx.arc(mousePosition[0] * pixelRatio, mousePosition[1] * pixelRatio, radius * pixelRatio, 0, 2 * Math.PI);
+                    ctx.lineWidth = 5 * pixelRatio;
+                    ctx.strokeStyle = 'rgba(0,0,0,0.5)';
+                    ctx.stroke();
+                }
+                ctx.clip();
+            });
+
+            // 呈现层后,恢复画布的背景
+            this.gaodeLayer.on('postcompose', event => {
+                let ctx = event.context;
+                ctx.restore();
+            });
         },
         // 地图图层层级控制
         MapLayerLevel() {

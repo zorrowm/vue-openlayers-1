@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Vuex from 'vuex'
 import Login from '../login/Login.vue'
-import Layout from '../layout/Layout.vue'
+// import Layout from '../layout/Layout.vue'
 
 Vue.use(VueRouter)
 
@@ -20,7 +19,7 @@ const routes = [
   },
   {
     path: "/", // 页面布局
-    name: "Layout",
+    // name: "Layout",
     component: Layout,
     redirect: '/MapControl',
     children: [

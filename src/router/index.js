@@ -1,15 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../login/Login.vue'
-// import Layout from '../layout/Layout.vue'
+import Layout from '../layout/Layout.vue'
+import store from '@/store/index'
 
 Vue.use(VueRouter)
-
-//解决重复点menu导航，报错问题
-const originalPush = VueRouter.prototype.push
-  VueRouter.prototype.push = function push(location) {
-  return originalPush.call(this, location).catch(err => err)
-}
 
 const routes = [
   {
@@ -19,9 +14,13 @@ const routes = [
   },
   {
     path: "/", // 页面布局
-    // name: "Layout",
+    name: "Layout",
     component: Layout,
-    redirect: '/MapControl',
+    redirect: to => { 
+      if(to.path === "/"){
+        return store.state.current[0]
+      }
+    },
     children: [
       {
         path: '/MapControl', // 地图控件
@@ -54,16 +53,23 @@ const routes = [
 
 ]
 
+// 创建路由并选择模式：hash模式(地址栏URL中的 # 符号，仅hash符号之前的内容会被包含在请求中)、history模式（前端的url必须和实际向后端发起请求的url 一致）
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
 })
 
+//解决重复点menu导航，报错问题
+const originalPush = VueRouter.prototype.push
+  VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
+
 /* 导航守卫 */
 router.beforeEach((to, from, next) => {
   // 获取登录状态和是否跳转到登录
-  if(sessionStorage.getItem('userInformation')) {
+  if(sessionStorage.getItem('userInformation') || to.name === 'Login') {
     next()
   } else {
     next({ name: 'Login' })

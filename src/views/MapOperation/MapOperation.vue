@@ -38,16 +38,16 @@
             @ok="visibleCoordinate = false"
             @cancel="visibleCoordinate = false"
         >
-            <p>坐标类型：
+            <p>坐标类型: 
                 <a-select default-value="EPSG:4326" style="width: 120px" v-model="currentCoordinate">
                     <a-select-option :value="i.id" v-for="i in coordinateData" :key="i.id">
                         {{i.name}}
                     </a-select-option>
                 </a-select>
             </p>
-            <p><button>当前分辨率</button></p>
-            <p><button>当前地图范围</button></p>
-            <p><button>当前视口范围</button></p>
+            <p>当前分辨率: {{MapRegionData.currentResolution}}</p>
+            <p>当前地图范围: {{MapRegionData.mapRange}}</p>
+            <p>当前视口范围: {{MapRegionData.viewportExtents}}</p>
         </a-modal>
     </div>
 </template>
@@ -90,7 +90,12 @@ export default {
             coordinateData: [
                 {id: 'EPSG:4326', name: '视窗坐标'},
                 {id: 'EPSG:3857', name: '逻辑坐标'},
-            ]
+            ],
+            MapRegionData: {
+                currentResolution: null,
+                mapRange: null,
+                viewportExtents: null,
+            }
         }
     },
     watch: {
@@ -119,6 +124,7 @@ export default {
                 source: new ol.Source.XYZ({
                     url: 'http://wprd0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&style=7&x={x}&y={y}&z={z}',
                     wrapX: false,
+                    crossOrigin: "Anonymous"
                 }),
                 visible: true, // 显示该图层
             });
@@ -280,10 +286,64 @@ export default {
         // 地图域信息
         MapRegionInformation() {
             this.visibleCoordinate = true;
+            
+            let view = this.MapOperation.getView(); // 获取地图视图。返回值为{ol.View}类。
+            let curResolution = view.getResolution(); // 获取最大分辨率
+            this.MapRegionData.currentResolution = curResolution
+            
+            let ex = view.calculateExtent(this.MapOperation.getSize()) // 获取地图范围
+            this.MapRegionData.mapRange =  ex
+
+            let viewSize = this.MapOperation.getSize() // 地图容器大小
+            this.MapRegionData.viewportExtents = viewSize
         },
         // 地图下载PNG
         MapDownloadPNG() {
+            // this.MapOperation.once('rendercomplete', () => {
+            //     var mapCanvas = document.createElement('canvas');
+            //     var size = map.getSize();
+            //     mapCanvas.width = size[0];
+            //     mapCanvas.height = size[1];
+            //     var mapContext = mapCanvas.getContext('2d');
+            //     Array.prototype.forEach.call(
+            //     document.querySelectorAll('.ol-layer canvas'),
+            //     function (canvas) {
+            //         if (canvas.width > 0) {
+            //         var opacity = canvas.parentNode.style.opacity;
+            //         mapContext.globalAlpha = opacity === '' ? 1 : Number(opacity);
+            //         var transform = canvas.style.transform;
+            //         // Get the transform parameters from the style's transform matrix
+            //         var matrix = transform
+            //             .match(/^matrix\(([^\(]*)\)$/)[1]
+            //             .split(',')
+            //             .map(Number);
+            //         // Apply the transform to the export map context
+            //         CanvasRenderingContext2D.prototype.setTransform.apply(
+            //             mapContext,
+            //             matrix
+            //         );
+            //         mapContext.drawImage(canvas, 0, 0);
+            //         }
+            //     }
+            //     );
+            //     if (navigator.msSaveBlob) {
+            //         // link download attribuute does not work on MS browsers
+            //         navigator.msSaveBlob(mapCanvas.msToBlob(), 'map.png');
+            //     } else {
+            //         var link = document.getElementById('image-download');
+            //         link.href = mapCanvas.toDataURL();
+            //         link.click();
+            //     }
+            // });
 
+            // this.MapOperation.once('rendercomplete', event => { 
+            //     let mapCanvas = document.querySelector('.ol-layers canvas')
+            //     console.log(mapCanvas);
+            //     mapCanvas.toBlob(bolb => {
+            //         saveAs(blob, 'map.png');
+            //     })
+            // })
+            // this.MapOperation.renderSync();
         },
         // 地图下载PDF
         MapDownloadPDF() {
@@ -305,6 +365,7 @@ export default {
         MapLayerGroup() {
             
         },
+
         // 确定地图定位
         clickPosition() {
             let view = this.MapOperation.getView();

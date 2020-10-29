@@ -82,7 +82,7 @@ export default {
                                 password: this.formData.password,
                             }
                         })
-                        console.log(this.$route.params);
+                        // console.log(this.$route.params);
                     }else{
                         this.$notification.error({
                             message: '请输入正确的账号密码',

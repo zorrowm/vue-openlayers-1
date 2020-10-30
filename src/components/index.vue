@@ -49,8 +49,7 @@ export default {
       //加载ArcgisMap
       this.arcgisLayer = new ol.Layer.Tile({
         source: new ol.Source.TileArcGISRest({
-          url:
-            'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer',
+          url: 'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer',
         }),
       })
       // 地图初始化图层加载
@@ -96,11 +95,11 @@ export default {
       this.Vectorlayer = new ol.Layer.Vector({
         source: this.Vectorsource,
         style: new ol.Style.Style({
-          fill: new ol.Style.Fill({
+          fill: new ol.Style.Fill({ // 填充颜色
             color: 'rgba(255,255,255,0.2)',
           }),
-          stroke: new ol.Style.Stroke({
-            color: '#e21e0a',
+          stroke: new ol.Style.Stroke({ // 线颜色
+            color: '#1890ff',
             width: 2,
           }),
           image: new ol.Style.Circle({
@@ -133,9 +132,8 @@ export default {
       this.map.addOverlay(this.measureTooltip)
     },
     addInteraction() {
-      //测类型对象
-      this.typeSelect = document.getElementById('type')
-      let type = this.typeSelect.value == 'area' ? 'Polygon' : 'LineString'
+      this.typeSelect = document.getElementById('type');
+      let type = this.typeSelect.value == 'area' ? 'Polygon' : 'LineString';  // 测类型对象
       this.draw = new ol.Interaction.Draw({
         source: this.Vectorsource,
         type: type, //绘制几何图形类型
@@ -144,7 +142,7 @@ export default {
           fill: new ol.Style.Fill({
             color: 'rgba(255,255,255,0.2)',
           }),
-          stroke: new ol.Style.Stroke({
+          stroke: new ol.Style.Stroke({  // 绘制过程中的线条颜色
             color: 'rgba(0,0,0,0.5)',
             lineDash: [10, 10],
             width: 2,
@@ -167,14 +165,14 @@ export default {
     addDraw() {
       //定义一个事件监听
       let listener
+      let count = 0;
       //绑定交互绘制工具开始绘制的事件
-      this.draw.on('drawstart', (evt) => {
+      this.draw.on('drawstart', evt => {
         this.sketch = evt.feature //绘制的要素
         let tooltipCoord = evt.coordinate //绘制的坐标
-        listener = this.sketch.getGeometry().on('change', (evt) => {
-          let geom = evt.target //绘制几何要素
-          console.log(evt);
-          let output //定义一个输出对象，用于记录面积和长度
+        listener = this.sketch.getGeometry().on('change', evt => {
+          let geom = evt.target // 绘制几何要素
+          let output // 定义一个输出对象，用于记录面积和长度
           if (geom instanceof ol.Geom.LineString) {
             output = this.formatLength(geom) //输出长度值
             tooltipCoord = geom.getLastCoordinate() //坐标
@@ -185,13 +183,47 @@ export default {
           this.measureTooltipElement.innerHTML = output //将测量值设置到工具提示框
           this.measureTooltip.setPosition(tooltipCoord) //设置测量工具提示框的显示位置
         })
+
+        //地图单击事件
+        this.map.on('singleclick', evt => {
+            //设置测量提示信息的位置坐标，用来确定鼠标点击后测量提示框的位置
+            this.measureTooltip.setPosition(evt.coordinate);
+            //如果是第一次点击，则设置测量提示框的文本内容为起点
+            if (count == 0) {
+                this.measureTooltipElement.innerHTML = "起点";
+            }
+            //根据鼠标点击位置生成一个点
+            let point = new ol.Geom.Point(evt.coordinate);
+            console.log(point);
+            //将该点要素添加到矢量数据源中
+            this.Vectorsource.addFeature(new ol.Features(point));
+            //更改测量提示框的样式，使测量提示框可见
+            this.measureTooltipElement.className = 'tooltip tooltip-static';
+            //创建测量提示框
+            this.createMesureTooltip() //创建测量工具提示框
+            //点击次数增加
+            count++;
+        });
+
+        //地图双击事件
+        this.map.on('dblclick', evt => {
+            //根据
+            let point = new ol.Geom.Point(evt.coordinate);
+            this.Vectorsource.addFeature(new ol.Features(point));
+        });
       })
       //绑定交互绘制工具结束绘制的事件
       this.draw.on('drawend', () => {
+        count = 0; //置空左击次数
+        this.measureTooltipElement.className = 'tooltip tooltip-static'; //设置测量提示框的样式
         this.sketch = null //置空当前绘制的要素对象
         this.measureTooltipElement = null //置空测量工具提示框对象
         this.createMesureTooltip() //重新创建一个测试工具提示框显示结果
-        new ol.Observable.unByKey(listener) //移除事件监听
+
+        //移除事件监听
+        ol.Observable.unByKey(listener) 
+        //移除地图单击事件
+        this.map.removeEventListener('singleclick');
       })
     },
     addFormat() {

@@ -2,18 +2,20 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import VuexPersistedstate from 'vuex-persistedstate'  //vuex 持久化插件
 
-
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    user: { // 用户信息
+    // 用户信息
+    user: { 
       username:null,
       password:null,
     },
+    // 当前导航路径
     current: ['/MapControl'],
   },
   mutations: {
+    // 通过 mutations 修改 state 值
     setState(state,payload){
       Object.keys(payload).forEach(key => {
         state[key] = payload[key]

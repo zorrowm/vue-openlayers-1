@@ -16,7 +16,7 @@ const routes = [
     path: "/", // 页面布局
     name: "Layout",
     component: Layout,
-    redirect: to => { 
+    redirect: to => {  // 重定向
       if(to.path === "/"){
         return store.state.current[0]
       }
@@ -42,14 +42,14 @@ const routes = [
         name: 'MapHeat',
         component: () => import('../views/MapHeat/MapHeat.vue')
       },
-      
+      {
+        path: "/MapMeasure", // 多边形 测距 侧面
+        name: "MapMeasure",
+        component: () => import("../views/MapMeasure/MapMeasure.vue")
+      },
     ]
   },
-  {
-    path: '/index', // 热力图
-    name: 'index',
-    component: () => import('../components/index.vue')
-  },
+  
 
 ]
 

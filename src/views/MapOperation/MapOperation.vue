@@ -166,7 +166,6 @@ export default {
   watch: {
     currentCoordinate: {
       handler(val) {
-        console.log(val)
         this.mousePostionControl.setProjection(ol.Proj.get(val))
       },
       deep: true, //深度监听

@@ -15,7 +15,8 @@ import * as Format from "ol/format" //
 import * as Geom from "ol/geom" // 
 import * as Feature from "ol/Feature" // 
 import * as Render from "ol/render" // 
-import * as Sphere from 'ol/sphere';
+import * as Sphere from 'ol/sphere' // 
+
 
 
 // 地图Css样式加载

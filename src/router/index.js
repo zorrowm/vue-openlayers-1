@@ -47,10 +47,13 @@ const routes = [
         name: "MapMeasure",
         component: () => import("../views/MapMeasure/MapMeasure.vue")
       },
+      {
+        path: '/test', // 测试
+        name: 'test',
+        component: () => import("../components/test.vue"),
+      },
     ]
   },
-  
-
 ]
 
 // 创建路由并选择模式：hash模式(地址栏URL中的 # 符号，仅hash符号之前的内容会被包含在请求中)、history模式（前端的url必须和实际向后端发起请求的url 一致）

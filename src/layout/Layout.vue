@@ -41,6 +41,7 @@ export default {
         { component: '/MapDraw', name: '画图' },
         { component: '/MapHeat', name: '热力图' },
         { component: '/MapMeasure', name: '测距侧面' },
+        { component: '/test', name: '测试专用' },
       ],
       menuCurrent: ['/MapControl'],
     }

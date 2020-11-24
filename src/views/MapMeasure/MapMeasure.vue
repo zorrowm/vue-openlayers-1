@@ -273,7 +273,7 @@ export default {
           let point = new ol.Geom.Point(evt.coordinate)
 
           // 将该点要素添加到矢量数据源中
-          this.Vectorsource.addFeature(new ol.Features(point))
+          this.Vectorsource.addFeature(new ol.Feature(point))
 
           // 更改测量提示框的样式，使测量提示框可见
           this.measureTooltipElement2.className = 'tooltip tooltip-static'
@@ -295,7 +295,7 @@ export default {
           let point = new ol.Geom.Point(evt.coordinate)
 
           // 将该点要素添加到矢量数据源中
-          this.Vectorsource.addFeature(new ol.Features(point))
+          this.Vectorsource.addFeature(new ol.Feature(point))
 
           // 更改测量提示框的样式，使测量提示框可见
           this.measureTooltipElement2.className = 'tooltip tooltip-static'
@@ -395,37 +395,42 @@ export default {
     height: 100%;
 
     /* 提示框的样式信息 */
-    .tooltip {
-      position: relative;
-      background: rgba(0, 0, 0, 0.5);
-      border-radius: 4px;
+    .ol-selectable {
       color: #000;
-      padding: 4px 8px;
-      opacity: 0.7;
-      white-space: nowrap;
-    }
 
-    .tooltip-measure {
-      opacity: 1;
-      font-weight: bold;
-    }
+      .tooltip {
+        position: relative;
+        background: rgb(0, 0, 0);
+        border-radius: 4px;
+        color: rgb(0, 0, 0);
+        padding: 4px 8px;
+        opacity: 0.7;
+        white-space: nowrap;
+      }
 
-    .tooltip-static {
-      background-color: #ffffff;
-      color: black;
-      border: 1px solid white;
-    }
+      .tooltip-measure {
+        opacity: 1;
+        font-weight: bold;
+      }
 
-    .tooltip-measure:before,
-    .tooltip-static:before {
-      border-top: 6px solid rgba(0, 0, 0, 0.5);
-      border-right: 6px solid transparent;
-      border-left: 6px solid transparent;
-      content: '';
-      position: absolute;
-      bottom: -6px;
-      margin-left: -7px;
-      left: 50%;
+      .tooltip-static {
+        background-color: #ffffff;
+        color: rgb(0, 0, 0);
+        border: 1px solid white;
+      }
+
+      .tooltip-measure:before,
+      .tooltip-static:before {
+        border-top: 6px solid rgba(0, 0, 0, 0.5);
+        border-right: 6px solid transparent;
+        border-left: 6px solid transparent;
+        content: '';
+        position: absolute;
+        bottom: -6px;
+        margin-left: -7px;
+        left: 50%;
+        color: rgb(0, 0, 0);
+      }
     }
   }
 }

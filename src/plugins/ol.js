@@ -1,6 +1,6 @@
 import Map from "ol/Map"   // Map地图层
 import View from "ol/View" // Map可视视图层
-import Features from "ol/Feature" // 
+import Feature from "ol/Feature" // 
 import Overlay from "ol/Overlay" //
 import * as Observable from "ol/Observable" // 
 import * as Layer from "ol/layer" // 虚基类图层，可视化表达（矢量地图数据、栅格地图数据）
@@ -13,7 +13,6 @@ import * as Style from "ol/style" //
 import * as Interaction from "ol/interaction" // 
 import * as Format from "ol/format" // 
 import * as Geom from "ol/geom" // 
-import * as Feature from "ol/Feature" // 
 import * as Render from "ol/render" // 
 import * as Sphere from 'ol/sphere' // 
 
@@ -25,7 +24,7 @@ import "ol/ol.css";
 let ol = {
   Map: Map,
   View: View,
-  Features: Features,
+  Feature: Feature,
   Overlay: Overlay,
   Observable: Observable,
   Layer: Layer,
@@ -38,12 +37,8 @@ let ol = {
   Interaction: Interaction,
   Format: Format,
   Geom: Geom,
-  Feature: Feature,
   Render: Render,
   Sphere: Sphere,
 }
 
 export default ol
-
-
-

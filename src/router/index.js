@@ -49,7 +49,7 @@ const routes = [
       },
       {
         path: '/test', // 测试
-        name: 'test',
+        name: 'Test',
         component: () => import("../components/test.vue"),
       },
     ]

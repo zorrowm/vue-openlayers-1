@@ -1,7 +1,7 @@
 <template>
   <div class="layout">
     <a-layout class="layout">
-      <a-layout-header>Openlayers实例学习</a-layout-header>
+      <a-layout-header>Openlayers实例</a-layout-header>
       <a-layout>
         <a-layout-sider>
           <a-menu
